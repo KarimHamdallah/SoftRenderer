@@ -1,0 +1,6 @@
+﻿  main.cpp
+F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(25,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(27,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(29,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(30,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  SoftRenderer.vcxproj -> F:\Projects\SoftRenderer\x64\Debug\SoftRenderer.exe
