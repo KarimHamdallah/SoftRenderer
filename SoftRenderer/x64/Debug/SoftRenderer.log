@@ -1,6 +1,24 @@
 ﻿  main.cpp
-F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(25,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(27,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(29,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(30,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+F:\Projects\SoftRenderer\SoftRenderer\src\main.cpp(357,25): warning C4101: 'texture2': unreferenced local variable
+glfw3.lib(context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(context.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(init.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(init.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(window.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(input.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(input.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_thread.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_thread.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_time.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_time.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(platform.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(platform.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(monitor.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(monitor.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(vulkan.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(vulkan.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_init.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_init.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(null_init.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(null_init.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_module.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_module.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_monitor.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(win32_joystick.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(wgl_context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(wgl_context.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(egl_context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(egl_context.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(osmesa_context.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(null_monitor.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(null_monitor.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(null_window.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(null_window.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
+glfw3.lib(null_joystick.obj) : warning LNK4099: PDB 'glfw3.pdb' was not found with 'glfw3.lib(null_joystick.obj)' or at 'F:\Projects\SoftRenderer\x64\Debug\glfw3.pdb'; linking object as if no debug info
   SoftRenderer.vcxproj -> F:\Projects\SoftRenderer\x64\Debug\SoftRenderer.exe
