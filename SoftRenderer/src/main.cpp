@@ -1,3 +1,7 @@
+#include <imgui.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_glfw.h>
+
 #include "GpuLayer/GpuLayer.h"
 #include <GLFW/glfw3.h>
 #include <algorithm>
@@ -6,6 +10,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #define RGBA_COLOR(r, g, b, a) ((r) | (g << 8) | (b << 16) | (a << 24))
+
+uint32_t ColorToUint32(const glm::vec4& Color)
+{
+	int red = Color.r * 255;
+	int green = Color.g * 255;
+	int blue = Color.b * 255;
+	int alpha = Color.a * 255;
+
+	return (uint32_t)RGBA_COLOR(red, green, blue, alpha);
+}
 
 
 int WindowWidth = 800;
@@ -68,11 +82,15 @@ int edgeFunction(Vertex a, Vertex b, Vertex c)
 };
 
 void DrawTriangle(uint32_t* pixels, Vertex A, Vertex B, Vertex C,
-	uint32_t color)
+	uint32_t color, bool draw_back_face = false)
 {
 	// Calculate the edge function for the whole triangle (ABC)
 	int ABC = edgeFunction(A, B, C);
 
+	// Back Face Culling
+	// Our nifty trick: Don't bother drawing the triangle if it's back facing
+	if (!draw_back_face && ABC < 0)
+		return;
 
 	// Initialise our Vertex
 	Vertex P;
@@ -128,6 +146,20 @@ void PerspectiveDivision(Vertex& v)
 }
 
 
+void ImgGuiBeginFrame()
+{
+	// Tell OpenGL a new frame is about to begin
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+}
+
+void ImGuiEndFrame()
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
 int main()
 {
 	if (!glfwInit())
@@ -145,10 +177,23 @@ int main()
 	pixels = new uint32_t[WindowWidth * WindowHeight];
 
 
+	// Initialize ImGUI
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+
+	glm::vec4 Color(0.0f, 0.0f, 1.0f, 1.0f);
+	glm::vec3 Position(0.0f, 0.0f, -5.0f);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// events
 		glfwPollEvents();
+
+		ImgGuiBeginFrame();
 
 		// clear screen
 		for (size_t i = 0; i < WindowWidth * WindowHeight; i++)
@@ -156,7 +201,7 @@ int main()
 
 
 		// vertices in NDC
-		Vertex A{ -0.5f, -0.5f, 0.0f, 1.0f };
+		Vertex A{ -0.5f, -0.5f,  0.0f, 1.0f };
 		Vertex B{ 0.0f,  0.5f,   0.0f, 1.0f };
 		Vertex C{ 0.5f, -0.5f,  0.0f, 1.0f };
 
@@ -169,9 +214,8 @@ int main()
 			0.01f, 1000.0f);
 
 		glm::mat4 model =
-			glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f))
-			* glm::rotate(glm::mat4(1.0f), (float)glfwGetTime() * 1.0f, glm::vec3(0.0f, 1.0f, 0.0f))
-			* glm::rotate(glm::mat4(1.0f), (float)glfwGetTime() * 1.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::translate(glm::mat4(1.0f), Position)
+			* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		A_transformed = proj * model * A_transformed;
 		B_transformed = proj * model * B_transformed;
@@ -192,14 +236,30 @@ int main()
 		PerspectiveDivision(C);
 
 
-		DrawTriangle(pixels, A, B, C, 0xFFFF0000);
+		DrawTriangle(pixels, A, B, C, ColorToUint32(Color), true);
+
+		ImGui::Begin("Editor");
+
+		ImGui::ColorEdit4("triangle color", &Color[0]);
+		ImGui::DragFloat3("Position", &Position[0], 0.01f);
+
+		Position.z = glm::clamp(Position.z, Position.z, -2.0f);
+		
+		ImGui::End();
 
 
 		framebuffer->Present(pixels);
+		ImGuiEndFrame();
 
 		// swap buffers
 		glfwSwapBuffers(window);
 	}
+
+
+	// Deletes all ImGUI instances
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
