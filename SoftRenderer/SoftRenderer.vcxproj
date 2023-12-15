@@ -71,19 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\imgui;$(SolutionDir)\SoftRenderer\vendor\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\imgui;$(SolutionDir)\SoftRenderer\vendor\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\imgui;$(SolutionDir)\SoftRenderer\vendor\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\imgui;$(SolutionDir)\SoftRenderer\vendor\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -152,27 +152,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\GpuLayer\GpuLayer.cpp" />
+    <ClCompile Include="src\Soft\Application.cpp" />
+    <ClCompile Include="src\Soft\mesh.cpp" />
+    <ClCompile Include="src\Soft\obj_loader.cpp" />
+    <ClCompile Include="src\Soft\Pipeline.cpp" />
+    <ClCompile Include="src\Soft\Renderer.cpp" />
+    <ClCompile Include="src\Soft\Texture.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
-    <ClCompile Include="vendor\imgui\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="vendor\imgui\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="vendor\imgui\imgui.cpp" />
-    <ClCompile Include="vendor\imgui\imgui_demo.cpp" />
-    <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
-    <ClCompile Include="vendor\imgui\imgui_tables.cpp" />
-    <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GpuLayer\GpuLayer.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="vendor\imgui\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="vendor\imgui\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="vendor\imgui\imconfig.h" />
-    <ClInclude Include="vendor\imgui\imgui.h" />
-    <ClInclude Include="vendor\imgui\imgui_internal.h" />
-    <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
-    <ClInclude Include="vendor\imgui\imstb_textedit.h" />
-    <ClInclude Include="vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\GpuLayer\shader.h" />
+    <ClInclude Include="src\GpuLayer\stb_image.h" />
+    <ClInclude Include="src\Soft\Application.h" />
+    <ClInclude Include="src\Soft\mesh.h" />
+    <ClInclude Include="src\Soft\obj_loader.h" />
+    <ClInclude Include="src\Soft\Pipeline.h" />
+    <ClInclude Include="src\Soft\Renderer.h" />
+    <ClInclude Include="src\Soft\Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\fs.frag" />
+    <None Include="res\vs.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

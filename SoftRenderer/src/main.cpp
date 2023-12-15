@@ -1,280 +1,256 @@
-#include <imgui.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_glfw.h>
-
-#include "GpuLayer/GpuLayer.h"
+#if 1
+#include "Soft/Application.h"
+#include "Soft/Renderer.h"
+#include "Soft/Pipeline.h"
 #include <GLFW/glfw3.h>
-#include <algorithm>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#define RGBA_COLOR(r, g, b, a) ((r) | (g << 8) | (b << 16) | (a << 24))
-
-uint32_t ColorToUint32(const glm::vec4& Color)
-{
-	int red = Color.r * 255;
-	int green = Color.g * 255;
-	int blue = Color.b * 255;
-	int alpha = Color.a * 255;
-
-	return (uint32_t)RGBA_COLOR(red, green, blue, alpha);
-}
-
-
-int WindowWidth = 800;
-int WindowHeight = 600;
-
-FrameBuffer* framebuffer = nullptr;
-uint32_t* pixels = nullptr;
-
-void OnResize(GLFWwindow* window, int width, int height);
-
-void DrawCircle(uint32_t* pixels, int cx, int cy, int r, uint32_t color)
-{
-	float half_raduis = 0.5f * r;
-	float topleft_x = cx - half_raduis;
-	float topleft_y = cy - half_raduis;
-
-	float bottomright_x = cx + half_raduis;
-	float bottomright_y = cy + half_raduis;
-
-	for (int py = topleft_y; py < bottomright_y; py++)
-	{
-		for (int px = topleft_x; px < bottomright_x; px++)
-		{
-			float x = px - cx;
-			float y = py - cy;
-			float dist = sqrtf(x * x + y * y);
-
-			if (dist <= half_raduis)
-				if (px > 0 && py > 0 && px < WindowWidth && py < WindowHeight)
-					pixels[py * WindowWidth + px] = color;
-		}
-	}
-}
-
-bool mouse_on_circle(int cx, int cy, int r, double mousex, double mousey)
-{
-	float x = (float)mousex - (float)cx;
-	float y = (float)mousey - (float)cy;
-	float dist = sqrtf(x * x + y * y);
-
-	std::cout << dist << "\n";
-
-	if (dist <= (r * 0.5f))
-		return true;
-
-	return false;
-}
-
-
-struct Vertex
-{
-	float x, y, z, w = 0.0f;
-};
-
-
-
-int edgeFunction(Vertex a, Vertex b, Vertex c)
-{
-	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-};
-
-void DrawTriangle(uint32_t* pixels, Vertex A, Vertex B, Vertex C,
-	uint32_t color, bool draw_back_face = false)
-{
-	// Calculate the edge function for the whole triangle (ABC)
-	int ABC = edgeFunction(A, B, C);
-
-	// Back Face Culling
-	// Our nifty trick: Don't bother drawing the triangle if it's back facing
-	if (!draw_back_face && ABC < 0)
-		return;
-
-	// Initialise our Vertex
-	Vertex P;
-
-	// Get the bounding box of the triangle
-	int minX = std::min(std::min(A.x, B.x), C.x);
-	int minY = std::min(std::min(A.y, B.y), C.y);
-	int maxX = std::max(std::max(A.x, B.x), C.x);
-	int maxY = std::max(std::max(A.y, B.y), C.y);
-
-	// Loop through all the pixels of the bounding box
-	for (P.y = minY; P.y < maxY; P.y++)
-	{
-		for (P.x = minX; P.x < maxX; P.x++)
-		{
-			// Calculate our edge functions
-			int ABP = edgeFunction(A, B, P);
-			int BCP = edgeFunction(B, C, P);
-			int CAP = edgeFunction(C, A, P);
-
-			// Normalise the edge functions by dividing by the total area to get the barycentric coordinates
-			float weightA = (float)BCP / ABC;
-			float weightB = (float)CAP / ABC;
-			float weightC = (float)ABP / ABC;
-
-			// If all the edge functions are positive, the Vertex is inside the triangle
-			if (weightA >= 0 && weightB >= 0 && weightC >= 0)
-			{
-				{
-					// Draw the pixel
-					if (P.x < WindowWidth && P.x > 0 && P.y < WindowHeight && P.y > 0)
-					{
-						pixels[(int)P.y * WindowWidth + (int)P.x] = color;
-					}
-				}
-			}
-		}
-	}
-}
-
-
-void ConvertFromNDCToScreenCoordinates(Vertex& v)
-{
-	v.x = (v.x * WindowWidth * 0.5f) + (v.w * WindowWidth * 0.5f);
-	v.y = (v.y * WindowHeight * -0.5f) + (v.w * WindowHeight * 0.5f);
-}
-
-void PerspectiveDivision(Vertex& v)
-{
-	v.x /= v.w;
-	v.y /= v.w;
-	v.z /= v.w;
-}
-
-
-void ImgGuiBeginFrame()
-{
-	// Tell OpenGL a new frame is about to begin
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-}
-
-void ImGuiEndFrame()
-{
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
+void OnResize(uint32_t width, uint32_t height);
+Soft::Pipeline* TexturedTrianglepipeline = nullptr;
 
 int main()
 {
-	if (!glfwInit())
+	Soft::AppSpecification AppSpec{ 800, 600, "soft" };
+	Soft::Application* App = new Soft::Application(AppSpec);
+	App->SetOnResizeCallBack(OnResize);
+	
+	Soft::Renderer::Init(800, 600);
+
+	std::vector<Vertex> vertices = 
 	{
-		std::cout << "failed to init glfw\n";
-		return 0;
+		// positions   xyzw         // texture coords
+		{-0.5f, -0.5f, 0.0f, 1.0f,  0.0f, 0.0f },   // A
+		{ 0.0f,  0.5f, 0.0f, 1.0f,  0.5f, 1.0f },   // B
+		{ 0.5f, -0.5f, 0.0f, 1.0f,  1.0f, 0.0f },   // C
+	};
+
+	std::vector<uint32_t> indices = { 0, 1, 2 }; // ABC
+
+	TexturedTrianglepipeline = new Soft::Pipeline();
+	TexturedTrianglepipeline->SetViewPort(0, 0, 800, 600);
+
+	TexturedTrianglepipeline->EnableBackFaceCulling(false);
+	TexturedTrianglepipeline->EnableFillTriangles(true);
+
+	std::shared_ptr<Texture2D> Texture = std::make_shared<Texture2D>("res/wall.jpg");
+
+	while (!App->ShouldClose())
+	{
+		Soft::Renderer::ClearScreen(0xFF000000);
+
+		TexturedTrianglepipeline->BindPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+		TexturedTrianglepipeline->BindRotation(glm::vec3(0.0f, (float)glfwGetTime() * 2.0f, 0.0f));
+		TexturedTrianglepipeline->BindColor({ 0.0f, 0.0f, 1.0f, 1.0f });
+		TexturedTrianglepipeline->BindTexture(Texture);
+
+		TexturedTrianglepipeline->DrawIndexed(vertices, indices);
+
+		Soft::Renderer::Present();
+
+		App->Update();
 	}
 
-	GLFWwindow* window = glfwCreateWindow(WindowWidth, WindowHeight, "software renderer", nullptr, nullptr);
-	
-	glfwSetWindowSizeCallback(window, OnResize);
-	GpuLayer::Init(window);
 
-	framebuffer = new FrameBuffer(WindowWidth, WindowHeight);
-	pixels = new uint32_t[WindowWidth * WindowHeight];
+	Soft::Renderer::Destroy();
+}
+
+void OnResize(uint32_t width, uint32_t height)
+{
+	Soft::Renderer::Resize(width, height);
+	TexturedTrianglepipeline->SetViewPort(0, 0, width, height);
+}
+#else
 
 
-	// Initialize ImGUI
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "GpuLayer/stb_image.h"
 
-	glm::vec4 Color(0.0f, 0.0f, 1.0f, 1.0f);
-	glm::vec3 Position(0.0f, 0.0f, -5.0f);
+#include "GpuLayer/shader.h"
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 
+#include <iostream>
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
+
+// settings
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
+
+int main()
+{
+	// glfw: initialize and configure
+	// ------------------------------
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+	// glfw window creation
+	// --------------------
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+	if (window == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	// glad: load all OpenGL function pointers
+	// ---------------------------------------
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
+
+	// build and compile our shader zprogram
+	// ------------------------------------
+	Shader ourShader("res/vs.vert", "res/fs.frag");
+
+	// set up vertex data (and buffer(s)) and configure vertex attributes
+	// ------------------------------------------------------------------
+	float vertices[] = 
+	{
+		// positions            // texture coords
+		-0.5f, -0.5f, 0.0f,      0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f,      1.0f, 0.0f,
+		 0.0f, 0.5f, 0.0f,       0.5f, 1.0f
+	};
+	unsigned int indices[] = {
+		0, 1, 2, // first triangle
+	};
+	unsigned int VBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+
+	// load and create a texture 
+	// -------------------------
+	unsigned int texture1, texture2;
+	// texture 1
+	// ---------
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+	unsigned char* data = stbi_load("res/wall.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
+	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+	// -------------------------------------------------------------------------------------------
+	ourShader.use(); // don't forget to activate/use the shader before setting uniforms!
+	// either set it manually like so:
+	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
+
+
+
+	// render loop
+	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
-		// events
-		glfwPollEvents();
+		// input
+		// -----
+		processInput(window);
 
-		ImgGuiBeginFrame();
+		// render
+		// ------
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		// clear screen
-		for (size_t i = 0; i < WindowWidth * WindowHeight; i++)
-			pixels[i] = 0xFF000000;
+		// bind textures on corresponding texture units
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
 
+		// render container
+		ourShader.use();
 
-		// vertices in NDC
-		Vertex A{ -0.5f, -0.5f,  0.0f, 1.0f };
-		Vertex B{ 0.0f,  0.5f,   0.0f, 1.0f };
-		Vertex C{ 0.5f, -0.5f,  0.0f, 1.0f };
-
-
-		glm::vec4 A_transformed = { A.x, A.y, A.z, A.w };
-		glm::vec4 B_transformed = { B.x, B.y, B.z, B.w };
-		glm::vec4 C_transformed = { C.x, C.y, C.z, C.w };
-
-		glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)WindowWidth / (float)WindowHeight,
+		glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT,
 			0.01f, 1000.0f);
 
 		glm::mat4 model =
-			glm::translate(glm::mat4(1.0f), Position)
-			* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f))
+			* glm::rotate(glm::mat4(1.0f), (float)glfwGetTime() * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		A_transformed = proj * model * A_transformed;
-		B_transformed = proj * model * B_transformed;
-		C_transformed = proj * model * C_transformed;
+		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "mp"), 1, GL_FALSE, &(proj * model)[0][0]);
 
-		A = { A_transformed.x, A_transformed.y, A_transformed.z, A_transformed.w };
-		B = { B_transformed.x, B_transformed.y, B_transformed.z, B_transformed.w };
-		C = { C_transformed.x, C_transformed.y, C_transformed.z, C_transformed.w };
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		// Verices in Screen space
-		ConvertFromNDCToScreenCoordinates(A);
-		ConvertFromNDCToScreenCoordinates(B);
-		ConvertFromNDCToScreenCoordinates(C);
-
-
-		PerspectiveDivision(A);
-		PerspectiveDivision(B);
-		PerspectiveDivision(C);
-
-
-		DrawTriangle(pixels, A, B, C, ColorToUint32(Color), true);
-
-		ImGui::Begin("Editor");
-
-		ImGui::ColorEdit4("triangle color", &Color[0]);
-		ImGui::DragFloat3("Position", &Position[0], 0.01f);
-
-		Position.z = glm::clamp(Position.z, Position.z, -2.0f);
-		
-		ImGui::End();
-
-
-		framebuffer->Present(pixels);
-		ImGuiEndFrame();
-
-		// swap buffers
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
 
+	// optional: de-allocate all resources once they've outlived their purpose:
+	// ------------------------------------------------------------------------
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 
-	// Deletes all ImGUI instances
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-
-	glfwDestroyWindow(window);
+	// glfw: terminate, clearing all previously allocated GLFW resources.
+	// ------------------------------------------------------------------
 	glfwTerminate();
 	return 0;
 }
 
-
-void OnResize(GLFWwindow* window, int width, int height)
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow* window)
 {
-	WindowWidth = width;
-	WindowHeight = height;
-
-	std::cout << "window resized: " << width << "x" << height << "\n";
-	
-	framebuffer->Resize(width, height);
-	delete[] pixels;
-	pixels = new uint32_t[WindowWidth * WindowHeight];
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
 }
+
+// glfw: whenever the window size changed (by OS or user resize) this callback function executes
+// ---------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	SCR_WIDTH = width;
+	SCR_HEIGHT = height;
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
+#endif
