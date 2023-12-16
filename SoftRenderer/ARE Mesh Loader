@@ -1,0 +1,12 @@
+Info,  T21572: Load res/cube.fbx
+Info,  T21572: Found a matching importer for this file format: Autodesk FBX Importer.
+Info,  T21572: Import root directory is 'res\'
+Error, T21572: FBX: no material assigned to mesh, setting default material
+Info,  T21572: Entering post processing pipeline
+Info,  T21572: Removed 2 nodes and 0 animation channels (1 output nodes)
+Info,  T21572: Kept 0 lights and 0 cameras.
+Info,  T21572: Moved 1 meshes to WCS (number of output meshes: 1)
+Info,  T21572: TriangulateProcess finished. All polygons have been triangulated.
+Info,  T21572: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Info,  T21572: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T21572: Leaving post processing pipeline
