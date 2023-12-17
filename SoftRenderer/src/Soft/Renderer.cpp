@@ -2,7 +2,12 @@
 
 namespace
 {
-	int edgeFunction(Vertex a, Vertex b, Vertex c)
+	int edgeFunction(vec3 a, vec3 b, vec3 c)
+	{
+		return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+	};
+
+	int edgeFunction(vertex a, vertex b, vertex c)
 	{
 		return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 	};
@@ -71,15 +76,16 @@ namespace Soft
 		}
 	}
 
-
-	void Renderer::DrawTriangle(Vertex A, Vertex B, Vertex C, uint32_t color,
-		Texture2D* Image)
+	void Renderer::DrawTriangle(vertex A, vertex B, vertex C, uint32_t color, Texture2D* Image)
 	{
 		// Calculate the edge function for the whole triangle (ABC)
 		int ABC = edgeFunction(A, B, C);
 
+		if (ABC < 0.0f) // back face culling
+			return;
+
 		// Initialise our Vertex
-		Vertex P;
+		vertex P;
 
 		// Get the bounding box of the triangle
 		int minX = std::min(std::min(A.x, B.x), C.x);
@@ -105,19 +111,19 @@ namespace Soft
 				// If all the edge functions are positive, the Vertex is inside the triangle
 				if (weightA >= 0 && weightB >= 0 && weightC >= 0)
 				{
-					if (Image != nullptr)
+					if (!Image)
 					{
-						// Perform perspective correction if necessary
-						// (assuming homogeneous coordinates, divide by w)
-						// Perspective correction
-						float w = weightA / A.w + weightB / B.w + weightC / C.w;
-						weightA /= w;
-						weightB /= w;
-						weightC /= w;
-
+						// Draw the pixel
+						if (P.x < m_Width && P.x > 0 && P.y < m_Height && P.y > 0)
+						{
+							m_Pixels[(int)P.y * m_Width + (int)P.x] = color;
+						}
+					}
+					else
+					{
 						// Interpolate texture coordinates with perspective correction
-						float u = weightA * A.u / A.w + weightB * B.u / B.w + weightC * C.u / C.w;
-						float v = weightA * A.v / A.w + weightB * B.v / B.w + weightC * C.v / C.w;
+						float u = weightA * A.u + weightB * B.u + weightC * C.u;
+						float v = weightA * A.v + weightB * B.v + weightC * C.v;
 
 						// Sample the texture using the interpolated texture coordinates
 						int textureX = static_cast<int>(u * Image->Width) % Image->Width;
@@ -129,12 +135,6 @@ namespace Soft
 							uint32_t textureColor = Image->pixels[textureY * Image->Width + textureX];
 							m_Pixels[(int)P.y * m_Width + (int)P.x] = textureColor;
 						}
-					}
-					else
-					{
-						// Draw the pixel
-						if (P.x < m_Width && P.x > 0 && P.y < m_Height && P.y > 0)
-							m_Pixels[(int)P.y * m_Width + (int)P.x] = color;
 					}
 				}
 			}
@@ -153,6 +153,7 @@ namespace Soft
 
 		while (true) {
 			// Calculate intensity based on the fractional part of coordinates
+			/*
 			intensity = 1.0f - (float)(dx + dy) / std::max(dx, dy);
 
 			uint8_t r = (color >> 16) & 0xFF;
@@ -165,9 +166,10 @@ namespace Soft
 			b = static_cast<uint8_t>(b * intensity);
 
 			uint32_t interpolatedColor = (r << 16) | (g << 8) | b;
-
+			*/
 			// Draw anti-aliased pixel
-			m_Pixels[(int)y0 * m_Width + (int)x0] = interpolatedColor;
+			if(x0 > 0 && x0 < m_Width - 1 && y0 > 0 && y0 < m_Height - 1)
+				m_Pixels[(int)y0 * m_Width + (int)x0] = color;
 
 			if (x0 == x1 && y0 == y1) {
 				break;

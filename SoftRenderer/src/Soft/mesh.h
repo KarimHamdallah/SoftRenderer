@@ -1,25 +1,26 @@
 #pragma once
-#include <vector>
+#include "3DFactory.h"
 #include <filesystem>
 
-struct Vertex
-{
-	Vertex() = default;
-	Vertex(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
-	Vertex(float x, float y, float z, float w, float u, float v) : x(x), y(y), z(z), w(w), u(u), v(v) {}
-	
-	float x, y, z, w = 0.0f; // pos
-	float u, v = 0.0f; // texcoord
-};
+#define INDICES_PER_TRIANGLE 3
 
-class Mesh
+namespace Soft
 {
-public:
-	Mesh() = default;
-	Mesh(const std::vector<Vertex>& Vertices)
-		: m_Vertices(Vertices) {}
-	Mesh(const std::filesystem::path& path);
 
-private:
-	std::vector<Vertex> m_Vertices;
-};
+	class Mesh
+	{
+	public:
+		Mesh(const std::filesystem::path& path);
+
+		~Mesh() = default;
+
+		uint32_t GetIndicesCount() const { return m_Indices.size() * INDICES_PER_TRIANGLE; }
+
+		const std::vector<vertex>& GetVertices() { return m_Vertices; }
+		const std::vector<uint32_t>& GetIndices() { return m_Indices; }
+
+	private:
+		std::vector<vertex> m_Vertices;
+		std::vector<uint32_t> m_Indices;
+	};
+}

@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\assimp\include;$(SolutionDir)\SoftRenderer\vendor\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\assimp\bin\windows\Debug;$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\assimp\include;$(SolutionDir)\SoftRenderer\vendor\glm;C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\assimp\bin\windows\Release;$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\assimp\include;$(SolutionDir)\SoftRenderer\vendor\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\assimp\bin\windows\Debug;$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\SoftRenderer\vendor\assimp\include;$(SolutionDir)\SoftRenderer\vendor\glm;C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\SoftRenderer\vendor\GLM\glm;$(SolutionDir)\SoftRenderer\vendor\GLAD\include;$(SolutionDir)\SoftRenderer\vendor\GLFW_\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\SoftRenderer\vendor\assimp\bin\windows\Release;$(SolutionDir)\SoftRenderer\vendor\GLFW_\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,7 +97,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,7 +115,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -129,7 +129,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,15 +147,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\GpuLayer\GpuLayer.cpp" />
     <ClCompile Include="src\Soft\Application.cpp" />
+    <ClCompile Include="src\Soft\Input.cpp" />
     <ClCompile Include="src\Soft\mesh.cpp" />
-    <ClCompile Include="src\Soft\obj_loader.cpp" />
-    <ClCompile Include="src\Soft\Pipeline.cpp" />
     <ClCompile Include="src\Soft\Renderer.cpp" />
     <ClCompile Include="src\Soft\Texture.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -166,8 +165,10 @@
     <ClInclude Include="src\GpuLayer\shader.h" />
     <ClInclude Include="src\GpuLayer\stb_image.h" />
     <ClInclude Include="src\Soft\Application.h" />
+    <ClInclude Include="src\Soft\3DFactory.h" />
+    <ClInclude Include="src\Soft\Input.h" />
+    <ClInclude Include="src\Soft\math.h" />
     <ClInclude Include="src\Soft\mesh.h" />
-    <ClInclude Include="src\Soft\obj_loader.h" />
     <ClInclude Include="src\Soft\Pipeline.h" />
     <ClInclude Include="src\Soft\Renderer.h" />
     <ClInclude Include="src\Soft\Texture.h" />

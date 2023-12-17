@@ -1,2 +1,6 @@
 ﻿  main.cpp
-  SoftRenderer.vcxproj -> C:\Users\LENOVO\Downloads\Compressed\SoftRenderer-Template\x64\Debug\SoftRenderer.exe
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(38,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(39,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(40,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\mesh.h(17,36): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+  SoftRenderer.vcxproj -> C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\x64\Debug\SoftRenderer.exe

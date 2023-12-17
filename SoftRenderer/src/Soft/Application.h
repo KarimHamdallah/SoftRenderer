@@ -18,7 +18,7 @@ namespace Soft
 		Application(const AppSpecification& spec);
 		~Application();
 
-		Application& Get() { return *m_Instance; }
+		static Application& Get() { return *m_Instance; }
 
 		uint32_t GetWidth() { return m_Data.Width; }
 		uint32_t GetHeight() { return m_Data.Height; }
@@ -27,9 +27,11 @@ namespace Soft
 		bool ShouldClose();
 		void Update();
 		void SetOnResizeCallBack(std::function<void(uint32_t, uint32_t)> func) { m_Data.m_OnResizeFuncPtr = func; }
+		void* GetNativeWindow() { return m_Data.WindowHandel; }
+
 
 	private:
-		Application* m_Instance = nullptr;
+		inline static Application* m_Instance = nullptr;
 		struct WindowData
 		{
 			uint32_t Width = 0;

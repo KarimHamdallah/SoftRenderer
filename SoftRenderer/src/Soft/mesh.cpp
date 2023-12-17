@@ -1,48 +1,101 @@
 #include "mesh.h"
-#include "obj_loader.h"
+
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
+#include <assimp/DefaultLogger.hpp>
+#include <assimp/LogStream.hpp>
 
 #include <iostream>
 
-Mesh::Mesh(const std::filesystem::path& path)
+namespace
 {
-    // Load .obj file
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
+	const unsigned int ImportFlags =
+		aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_SortByPType |
+		aiProcess_PreTransformVertices |
+		aiProcess_GenNormals |
+		aiProcess_GenUVCoords |
+		aiProcess_OptimizeMeshes |
+		aiProcess_Debone |
+		aiProcess_ValidateDataStructure;
+}
 
-    std::string err;
-    std::string warn;
-    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.string().c_str());
+struct LogStream : public Assimp::LogStream
+{
+	static void Initialize()
+	{
+		if (Assimp::DefaultLogger::isNullLogger())
+		{
+			Assimp::DefaultLogger::create("ARE Mesh Loader", Assimp::Logger::NORMAL);
+			Assimp::DefaultLogger::get()->attachStream(new LogStream, Assimp::Logger::Err | Assimp::Logger::Warn);
+		}
+	}
 
-    if (!warn.empty())
-        std::cout << warn << std::endl;
+	void write(const char* message) override
+	{
+		std::cout << "Assimp error:" << message << "\n";
+	}
+};
 
-    if (!err.empty())
-        std::cout << err << std::endl;
+namespace Soft
+{
 
-    if (!ret)
-        return;
+	Mesh::Mesh(const std::filesystem::path& path)
+	{
+		LogStream::Initialize();
 
-    // Process vertices and indices
-    for (const auto& shape : shapes)
-    {
-        for (const auto& index : shape.mesh.indices)
-        {
-            // Access vertex data
-            tinyobj::real_t vx = attrib.vertices[3 * index.vertex_index + 0];
-            tinyobj::real_t vy = attrib.vertices[3 * index.vertex_index + 1];
-            tinyobj::real_t vz = attrib.vertices[3 * index.vertex_index + 2];
+		std::cout << "Loading mesh: " << path.string() << "\n";
 
-            // Access normal data if needed
-            tinyobj::real_t nx = attrib.normals[3 * index.normal_index + 0];
-            tinyobj::real_t ny = attrib.normals[3 * index.normal_index + 1];
-            tinyobj::real_t nz = attrib.normals[3 * index.normal_index + 2];
+		Assimp::Importer importer;
 
-            // Access texture coordinate data if needed
-            tinyobj::real_t u = attrib.texcoords[2 * index.texcoord_index + 0];
-            tinyobj::real_t v = attrib.texcoords[2 * index.texcoord_index + 1];
+		const aiScene* scene = importer.ReadFile(path.string(), ImportFlags);
+		if (!scene || !scene->HasMeshes())
+			std::cout << "Failed to load mesh file: " << path.string() << "\n";
 
-            m_Vertices.push_back({ vx, vy, vz, 1.0f, u, v });
-        }
-    }
+		aiMesh* mesh = scene->mMeshes[0];
+
+		//ASSERT(mesh->HasPositions(), "Meshes require positions.");
+		//ASSERT(mesh->HasNormals(), "Meshes require normals.");
+
+		m_Vertices.reserve(mesh->mNumVertices);
+
+		// Extract vertices from model
+		for (size_t i = 0; i < m_Vertices.capacity(); i++)
+		{
+			vertex vertex;
+			vertex.x = mesh->mVertices[i].x;
+			vertex.y = mesh->mVertices[i].y;
+			vertex.z = mesh->mVertices[i].z;
+
+			/*
+			vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+
+			if (mesh->HasTangentsAndBitangents())
+			{
+				vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
+				vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+			}
+			*/
+
+			if (mesh->HasTextureCoords(0))
+			{
+				vertex.u = mesh->mTextureCoords[0][i].x;
+				vertex.v = mesh->mTextureCoords[0][i].y;
+			}
+
+			m_Vertices.push_back(vertex);
+		}
+
+
+		// Extract indices from model
+		m_Indices.reserve(mesh->mNumFaces);
+		for (size_t i = 0; i < mesh->mNumFaces; i++)
+		{
+			m_Indices.push_back(mesh->mFaces[i].mIndices[0]);
+			m_Indices.push_back(mesh->mFaces[i].mIndices[1]);
+			m_Indices.push_back(mesh->mFaces[i].mIndices[2]);
+		}
+	}
 }
