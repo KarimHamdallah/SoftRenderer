@@ -36,9 +36,6 @@
     <ClCompile Include="src\Soft\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Soft\mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GpuLayer\GpuLayer.h">
@@ -68,10 +65,16 @@
     <ClInclude Include="src\Soft\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Soft\mesh.h">
+    <ClInclude Include="src\Soft\Pipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Soft\Pipeline.h">
+    <ClInclude Include="src\Soft\Effects\TexturedVertexEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Soft\Effects\ColoredVertexEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Soft\ZBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

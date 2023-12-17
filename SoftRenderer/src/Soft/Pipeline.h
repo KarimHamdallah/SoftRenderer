@@ -3,9 +3,16 @@
 
 namespace Soft
 {
+	template<class Effect>
 	class Pipeline
 	{
+		typedef typename Effect::vertex vertex;
 	public:
+		Pipeline(int x, int y, uint32_t width, uint32_t height)
+		{
+			SetViewPort(x, y, width, height);
+		}
+
 		void SetViewPort(int x, int y, uint32_t width, uint32_t height)
 		{
 			m_ViewportWidth = width;
@@ -17,8 +24,7 @@ namespace Soft
 
 		void BindPosition(const vec3& Position) { m_Position = Position; };
 		void BindRotation(const vec3& Rotation) { m_Rotation = Rotation; };
-		void BindColor(const vec3& Color) { m_Color = Color; }
-		void BindTexture(const std::shared_ptr<Texture2D>& Texture) { m_Texture = Texture; }
+		void BindTexture(const std::shared_ptr<Texture2D>& Texture) { m_Effect.ps.m_Texture = Texture; }
 
 		void DrawIndexed(const std::vector<vertex>& Vertices, const std::vector<uint32_t> Indices)
 		{
@@ -84,32 +90,94 @@ namespace Soft
 			FromNDCToScreenSpace(v2); // from ndc to screen space
 			FromNDCToScreenSpace(v3); // from ndc to screen space
 
-			uint32_t color = RGBA_COLOR((int)m_Color.x, (int)m_Color.y, (int)m_Color.z, 1);
-
-			Soft::Renderer::DrawTriangle(
+			DrawTriangle(
 				v1,
 				v2,
 				v3,
-				color,
-				m_Texture.get());
+				1);
 		}
 
 	private:
 		void FromNDCToScreenSpace(vertex& v)
 		{
 			const float zInv = 1.0f / v.z;
-			v.x = (v.x * zInv + 1.0f) * m_ViewportWidth * 0.5f;
-			v.y = (-v.y * zInv + 1.0f) * m_ViewportHeight * 0.5f;
+			v = v * zInv;
+			v.x = (v.x + 1.0f) * m_ViewportWidth * 0.5f;
+			v.y = (-v.y + 1.0f) * m_ViewportHeight * 0.5f;	
+			v.z = zInv;
 		}
 
+		void DrawTriangle(vertex A, vertex B, vertex C, uint32_t color)
+		{
+			// Calculate the edge function for the whole triangle (ABC)
+			int ABC = edgeFunction(A, B, C);
+
+			if (ABC < 0.0f) // back face culling
+				return;
+
+			// Initialise our Vertex
+			vertex P;
+
+			// Get the bounding box of the triangle
+			int minX = std::min(std::min(A.x, B.x), C.x);
+			int minY = std::min(std::min(A.y, B.y), C.y);
+			int maxX = std::max(std::max(A.x, B.x), C.x);
+			int maxY = std::max(std::max(A.y, B.y), C.y);
+
+			// Loop through all the pixels of the bounding box
+			for (P.y = minY; P.y < maxY; P.y++)
+			{
+				for (P.x = minX; P.x < maxX; P.x++)
+				{
+					// Calculate our edge functions
+					int ABP = edgeFunction(A, B, P);
+					int BCP = edgeFunction(B, C, P);
+					int CAP = edgeFunction(C, A, P);
+
+					// Normalise the edge functions by dividing by the total area to get the barycentric coordinates
+					float weightA = (float)BCP / ABC;
+					float weightB = (float)CAP / ABC;
+					float weightC = (float)ABP / ABC;
+
+					// If all the edge functions are positive, the Vertex is inside the triangle
+					if (weightA >= 0 && weightB >= 0 && weightC >= 0)
+					{
+						// interpolate whole vertex attributes
+						vertex InterpolatedVertex = A * weightA + B * weightB + C * weightC;
+						
+						const float z = 1 / InterpolatedVertex.z;
+						InterpolatedVertex = InterpolatedVertex * z;
+
+						if (Renderer::TestAndSet(P.x, P.y, z)) // depth test
+						{
+
+							// Draw the pixel
+							if (P.x < m_ViewportWidth && P.x > 0 && P.y < m_ViewportHeight && P.y > 0)
+							{
+								Renderer::PutPixel((int)P.x, (int)P.y, m_Effect.ps.GetColor(InterpolatedVertex));
+							}
+						}
+					}
+				}
+			}
+		}
+
+		int edgeFunction(vertex a, vertex b, vertex c)
+		{
+			return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+		};
+
 	private:
+		Effect m_Effect;
+
 		uint32_t m_ViewportWidth, m_ViewportHeight = 0;
 		uint32_t m_ViewportX, m_ViewportY = 0;
 
 		vec3 m_Rotation = vec3(0.0f);
 		vec3 m_Position = { 0.0f, 0.0f, 2.0f };
 		vec3 m_Color = vec3(0.0f);
-		std::shared_ptr<Texture2D> m_Texture = nullptr;
+
+		
 	};
 }
 
