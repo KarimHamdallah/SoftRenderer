@@ -1,5 +1,6 @@
 #pragma once
 #include "Renderer.h"
+#include <algorithm>
 
 namespace Soft
 {
@@ -25,6 +26,8 @@ namespace Soft
 		void BindPosition(const vec3& Position) { m_Position = Position; };
 		void BindRotation(const vec3& Rotation) { m_Rotation = Rotation; };
 		void BindTexture(const std::shared_ptr<Texture2D>& Texture) { m_Effect.ps.m_Texture = Texture; }
+		void EnableBackFaceCulling(bool cull) { m_CullBackFaces = cull; }
+
 
 		void DrawIndexed(const std::vector<vertex>& Vertices, const std::vector<uint32_t> Indices)
 		{
@@ -90,6 +93,7 @@ namespace Soft
 			FromNDCToScreenSpace(v2); // from ndc to screen space
 			FromNDCToScreenSpace(v3); // from ndc to screen space
 
+			
 			DrawTriangle(
 				v1,
 				v2,
@@ -112,17 +116,18 @@ namespace Soft
 			// Calculate the edge function for the whole triangle (ABC)
 			int ABC = edgeFunction(A, B, C);
 
-			if (ABC < 0.0f) // back face culling
+			if (ABC < 0.0f && m_CullBackFaces) // back face culling
 				return;
 
 			// Initialise our Vertex
 			vertex P;
 
+
 			// Get the bounding box of the triangle
-			int minX = std::min(std::min(A.x, B.x), C.x);
-			int minY = std::min(std::min(A.y, B.y), C.y);
-			int maxX = std::max(std::max(A.x, B.x), C.x);
-			int maxY = std::max(std::max(A.y, B.y), C.y);
+			int minX = std::min(std::min(A.x, B.x), C.x) - 1;
+			int minY = std::min(std::min(A.y, B.y), C.y) - 1;
+			int maxX = std::max(std::max(A.x, B.x), C.x) + 1;
+			int maxY = std::max(std::max(A.y, B.y), C.y) + 1;
 
 			// Loop through all the pixels of the bounding box
 			for (P.y = minY; P.y < maxY; P.y++)
@@ -140,7 +145,7 @@ namespace Soft
 					float weightC = (float)ABP / ABC;
 
 					// If all the edge functions are positive, the Vertex is inside the triangle
-					if (weightA >= 0 && weightB >= 0 && weightC >= 0)
+					if (ABP >= 0 && BCP >= 0 && CAP >= 0)
 					{
 						// interpolate whole vertex attributes
 						vertex InterpolatedVertex = A * weightA + B * weightB + C * weightC;
@@ -148,9 +153,8 @@ namespace Soft
 						const float z = 1 / InterpolatedVertex.z;
 						InterpolatedVertex = InterpolatedVertex * z;
 
-						if (Renderer::TestAndSet(P.x, P.y, z)) // depth test
+						if (true || Renderer::TestAndSet((int)P.x, (int)P.y, z)) // depth test
 						{
-
 							// Draw the pixel
 							if (P.x < m_ViewportWidth && P.x > 0 && P.y < m_ViewportHeight && P.y > 0)
 							{
@@ -167,6 +171,8 @@ namespace Soft
 			return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 		};
 
+
+
 	private:
 		Effect m_Effect;
 
@@ -176,8 +182,7 @@ namespace Soft
 		vec3 m_Rotation = vec3(0.0f);
 		vec3 m_Position = { 0.0f, 0.0f, 2.0f };
 		vec3 m_Color = vec3(0.0f);
-
-		
+		bool m_CullBackFaces = true;
 	};
 }
 

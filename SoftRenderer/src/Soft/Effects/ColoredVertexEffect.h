@@ -8,7 +8,7 @@ public:
 
 	struct vertex
 	{
-		float x, y, z, r, g, b;
+		float x, y, z, r, g, b = 0.0f;
 
 		vertex operator+(const vertex& rhs) const
 		{

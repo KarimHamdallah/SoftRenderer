@@ -1,12 +1,10 @@
 #include "Soft/Application.h"
 #include "Soft/Input.h"
 #include "Soft/Pipeline.h"
-#include "Soft/Effects/TexturedVertexEffect.h"
-#include "Soft/Effects/ColoredVertexEffect.h"
+#include "Soft/mesh.h"
 
 void OnResize(uint32_t width, uint32_t height);
-std::shared_ptr<Soft::Pipeline<TexturedVertexEffect>> TexturedTrianglePipeline;
-std::shared_ptr<Soft::Pipeline<ColoredVertexEffect>> ColoredTrianglePipeline;
+std::shared_ptr<Soft::Pipeline<NormaledVertexEffect>> NormaledTrianglePipeline;
 
 int main()
 {
@@ -19,64 +17,60 @@ int main()
 	Soft::Renderer::Init(800, 800);
 	
 	// Pipeline
-	TexturedTrianglePipeline = std::make_shared<Soft::Pipeline<TexturedVertexEffect>>(0, 0, 800, 800);
-
-	ColoredTrianglePipeline = std::make_shared<Soft::Pipeline<ColoredVertexEffect>>(0, 0, 800, 800);
+	NormaledTrianglePipeline = std::make_shared<Soft::Pipeline<NormaledVertexEffect>>(0, 0, 800, 800);
+	NormaledTrianglePipeline->EnableBackFaceCulling(true);
 
 	// start
 
-	// Triangles
-	IndexedTriangleList<TexturedVertexEffect::vertex> TexturedCube = Factory3D::GetIndexedTriangleCubeTextured(1.0f);
-	IndexedTriangleList<ColoredVertexEffect::vertex> ColoredCube = Factory3D::GetIndexedTriangleCubeColored(1.0f);
+	// models
+	std::shared_ptr<Soft::Mesh> model = std::make_shared<Soft::Mesh>("res/bunny.obj");
+
 	
 	// Input
 	float thetaX = 0.0f;
 	float thetaY = 0.0f;
 	float thetaZ = 0.0f;
 
-	vec3 Pos = { 0.0f, 0.0f, 2.0f };
+	vec3 Pos = { 0.0f, -1.0f, 10.0f };
 
-	std::shared_ptr<Texture2D> Tex = std::make_shared<Texture2D>("res/wood.jpg");
+	std::shared_ptr<Texture2D> Tex = std::make_shared<Texture2D>("res/flag.png", false);
 
 	while (!App->ShouldClose())
 	{
-		Soft::Renderer::ClearScreen(0xFF000000);
+		Soft::Renderer::ClearScreen(0x292b29);
 
 
 		// update
 		// Handle keyboard input
 		if (Soft::Input::IsKeyPressed(Soft::Key::Q))
-			thetaX++;
+			thetaX += 5.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::W))
-			thetaY++;
+			thetaY += 5.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::E))
-			thetaZ++;
+			thetaZ += 5.0f;
 
 		if (Soft::Input::IsKeyPressed(Soft::Key::Up))
-			Pos.z += 0.1f;
+			Pos.z += 1.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::Down))
-			Pos.z -= 0.1f;
+			Pos.z -= 1.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::Right))
-			Pos.x += 0.1f;
+			Pos.x += 1.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::Left))
-			Pos.x -= 0.1f;
+			Pos.x -= 1.0f;
 
 
 		// render
 		Soft::Renderer::BeginFrame();
 
 
-		TexturedTrianglePipeline->BindPosition(Pos);
-		TexturedTrianglePipeline->BindRotation({ thetaX, thetaY, thetaZ });
-		TexturedTrianglePipeline->BindTexture(Tex);
+		NormaledTrianglePipeline->BindPosition(Pos);
+		NormaledTrianglePipeline->BindRotation({ thetaX, thetaY, thetaZ });
+		NormaledTrianglePipeline->BindTexture(Tex);
 
-		TexturedTrianglePipeline->DrawIndexed(TexturedCube.vertices, TexturedCube.indices);
+		NormaledTrianglePipeline->DrawIndexed(model->GetVertices(), model->GetIndices());
 
-		
-		ColoredTrianglePipeline->BindPosition({ 0.5f, 0.0f, 2.0f });
-		ColoredTrianglePipeline->BindRotation({ thetaX, thetaY, thetaZ });
+		thetaY -= 5.0f;
 
-		ColoredTrianglePipeline->DrawIndexed(ColoredCube.vertices, ColoredCube.indices);
 
 		Soft::Renderer::Present();
 
@@ -88,6 +82,5 @@ int main()
 void OnResize(uint32_t width, uint32_t height)
 {
 	Soft::Renderer::Resize(width, height);
-	TexturedTrianglePipeline->SetViewPort(0, 0, width, height);
-	ColoredTrianglePipeline->SetViewPort(0, 0, width, height);
+	NormaledTrianglePipeline->SetViewPort(0, 0, width, height);
 }

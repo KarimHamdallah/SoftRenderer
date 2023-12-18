@@ -1,12 +1,3 @@
-Info,  T26044: Load res/cube.fbx
-Info,  T26044: Found a matching importer for this file format: Autodesk FBX Importer.
-Info,  T26044: Import root directory is 'res\'
-Error, T26044: FBX: no material assigned to mesh, setting default material
-Info,  T26044: Entering post processing pipeline
-Info,  T26044: Removed 2 nodes and 0 animation channels (1 output nodes)
-Info,  T26044: Kept 0 lights and 0 cameras.
-Info,  T26044: Moved 1 meshes to WCS (number of output meshes: 1)
-Info,  T26044: TriangulateProcess finished. All polygons have been triangulated.
-Info,  T26044: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
-Info,  T26044: CalcTangentsProcess finished. Tangents have been calculated
-Info,  T26044: Leaving post processing pipeline
+Info,  T27228: Load res/bunny.obj
+Info,  T27228: Found a matching importer for this file format: Wavefront Object Importer.
+Info,  T27228: Import root directory is 'res\'

@@ -50,7 +50,7 @@ namespace Soft
 
 		Assimp::Importer importer;
 
-		const aiScene* scene = importer.ReadFile(path.string(), ImportFlags);
+		const aiScene* scene = importer.ReadFile(path.string(), 0);
 		if (!scene || !scene->HasMeshes())
 			std::cout << "Failed to load mesh file: " << path.string() << "\n";
 
@@ -64,14 +64,16 @@ namespace Soft
 		// Extract vertices from model
 		for (size_t i = 0; i < m_Vertices.capacity(); i++)
 		{
-			vertex vertex;
+			NormaledVertexEffect::vertex vertex;
 			vertex.x = mesh->mVertices[i].x;
 			vertex.y = mesh->mVertices[i].y;
 			vertex.z = mesh->mVertices[i].z;
 
-			/*
-			vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+			vertex.nx = mesh->mNormals[i].x;
+			vertex.ny = mesh->mNormals[i].y;
+			vertex.nz = mesh->mNormals[i].z;
 
+			/*
 			if (mesh->HasTangentsAndBitangents())
 			{
 				vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
@@ -79,6 +81,7 @@ namespace Soft
 			}
 			*/
 
+			
 			if (mesh->HasTextureCoords(0))
 			{
 				vertex.u = mesh->mTextureCoords[0][i].x;

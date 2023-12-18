@@ -154,6 +154,7 @@
     <ClCompile Include="src\GpuLayer\GpuLayer.cpp" />
     <ClCompile Include="src\Soft\Application.cpp" />
     <ClCompile Include="src\Soft\Input.cpp" />
+    <ClCompile Include="src\Soft\mesh.cpp" />
     <ClCompile Include="src\Soft\Renderer.cpp" />
     <ClCompile Include="src\Soft\Texture.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -166,9 +167,11 @@
     <ClInclude Include="src\Soft\Application.h" />
     <ClInclude Include="src\Soft\3DFactory.h" />
     <ClInclude Include="src\Soft\Effects\ColoredVertexEffect.h" />
+    <ClInclude Include="src\Soft\Effects\NormaledVertex.h" />
     <ClInclude Include="src\Soft\Effects\TexturedVertexEffect.h" />
     <ClInclude Include="src\Soft\Input.h" />
     <ClInclude Include="src\Soft\math.h" />
+    <ClInclude Include="src\Soft\mesh.h" />
     <ClInclude Include="src\Soft\Pipeline.h" />
     <ClInclude Include="src\Soft\Renderer.h" />
     <ClInclude Include="src\Soft\Texture.h" />

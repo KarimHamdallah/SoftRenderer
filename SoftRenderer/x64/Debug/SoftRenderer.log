@@ -2,47 +2,38 @@
 C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Effects\ColoredVertexEffect.h(28,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Effects\ColoredVertexEffect.h(29,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Effects\ColoredVertexEffect.h(30,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(44,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(38): message : while compiling class template member function 'std::vector<vertex,std::allocator<vertex>> Soft::Pipeline<ColoredVertexEffect>::ProcessVertices(const std::vector<vertex,std::allocator<vertex>> &)'
-          with
-          [
-              vertex=ColoredVertexEffect::vertex
-          ]
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(31): message : see reference to function template instantiation 'std::vector<vertex,std::allocator<vertex>> Soft::Pipeline<ColoredVertexEffect>::ProcessVertices(const std::vector<vertex,std::allocator<vertex>> &)' being compiled
-          with
-          [
-              vertex=ColoredVertexEffect::vertex
-          ]
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\main.cpp(76): message : see reference to class template instantiation 'Soft::Pipeline<ColoredVertexEffect>' being compiled
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(45,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(46,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(122,13): warning C4244: 'initializing': conversion from 'const _Ty' to 'int', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\mesh.h(17,36): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(47,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(41): message : while compiling class template member function 'std::vector<NormaledVertexEffect::vertex,std::allocator<NormaledVertexEffect::vertex>> Soft::Pipeline<NormaledVertexEffect>::ProcessVertices(const std::vector<NormaledVertexEffect::vertex,std::allocator<NormaledVertexEffect::vertex>> &)'
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(34): message : see reference to function template instantiation 'std::vector<NormaledVertexEffect::vertex,std::allocator<NormaledVertexEffect::vertex>> Soft::Pipeline<NormaledVertexEffect>::ProcessVertices(const std::vector<NormaledVertexEffect::vertex,std::allocator<NormaledVertexEffect::vertex>> &)' being compiled
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\main.cpp(21): message : see reference to class template instantiation 'Soft::Pipeline<NormaledVertexEffect>' being compiled
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(48,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(49,38): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(127,13): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(111): message : while compiling class template member function 'void Soft::Pipeline<ColoredVertexEffect>::DrawTriangle(ColoredVertexEffect::vertex,ColoredVertexEffect::vertex,ColoredVertexEffect::vertex,uint32_t)'
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(93): message : see reference to function template instantiation 'void Soft::Pipeline<ColoredVertexEffect>::DrawTriangle(ColoredVertexEffect::vertex,ColoredVertexEffect::vertex,ColoredVertexEffect::vertex,uint32_t)' being compiled
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(123,13): warning C4244: 'initializing': conversion from 'const _Ty' to 'int', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(115): message : while compiling class template member function 'void Soft::Pipeline<NormaledVertexEffect>::DrawTriangle(NormaledVertexEffect::vertex,NormaledVertexEffect::vertex,NormaledVertexEffect::vertex,uint32_t)'
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(97): message : see reference to function template instantiation 'void Soft::Pipeline<NormaledVertexEffect>::DrawTriangle(NormaledVertexEffect::vertex,NormaledVertexEffect::vertex,NormaledVertexEffect::vertex,uint32_t)' being compiled
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(128,13): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(124,13): warning C4244: 'initializing': conversion from 'const _Ty' to 'int', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(129,13): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(125,13): warning C4244: 'initializing': conversion from 'const _Ty' to 'int', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(130,13): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(128,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(130,16): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(151,38): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(151,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(167,37): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(166): message : while compiling class template member function 'int Soft::Pipeline<ColoredVertexEffect>::edgeFunction(ColoredVertexEffect::vertex,ColoredVertexEffect::vertex,ColoredVertexEffect::vertex)'
-C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(113): message : see reference to function template instantiation 'int Soft::Pipeline<ColoredVertexEffect>::edgeFunction(ColoredVertexEffect::vertex,ColoredVertexEffect::vertex,ColoredVertexEffect::vertex)' being compiled
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(133,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(135,16): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(171,37): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(170): message : while compiling class template member function 'int Soft::Pipeline<NormaledVertexEffect>::edgeFunction(NormaledVertexEffect::vertex,NormaledVertexEffect::vertex,NormaledVertexEffect::vertex)'
+C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\SoftRenderer\src\Soft\Pipeline.h(117): message : see reference to function template instantiation 'int Soft::Pipeline<NormaledVertexEffect>::edgeFunction(NormaledVertexEffect::vertex,NormaledVertexEffect::vertex,NormaledVertexEffect::vertex)' being compiled
   SoftRenderer.vcxproj -> C:\Users\LENOVO\Downloads\Compressed\SoftRenderer\x64\Debug\SoftRenderer.exe
