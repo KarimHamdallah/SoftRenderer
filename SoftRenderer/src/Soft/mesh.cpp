@@ -13,6 +13,7 @@ namespace
 	const unsigned int ImportFlags =
 		aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
+		aiProcess_FlipUVs |
 		aiProcess_SortByPType |
 		aiProcess_PreTransformVertices |
 		aiProcess_GenNormals |
@@ -50,7 +51,7 @@ namespace Soft
 
 		Assimp::Importer importer;
 
-		const aiScene* scene = importer.ReadFile(path.string(), 0);
+		const aiScene* scene = importer.ReadFile(path.string(), ImportFlags);
 		if (!scene || !scene->HasMeshes())
 			std::cout << "Failed to load mesh file: " << path.string() << "\n";
 

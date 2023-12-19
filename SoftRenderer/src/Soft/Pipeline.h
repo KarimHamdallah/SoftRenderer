@@ -1,6 +1,7 @@
 #pragma once
 #include "Renderer.h"
 #include <algorithm>
+#include <GLFW/glfw3.h>
 
 namespace Soft
 {
@@ -99,6 +100,12 @@ namespace Soft
 				v2,
 				v3,
 				1);
+
+			/*
+			Renderer::DrawLine(v1.x, v1.y, v2.x, v2.y, 0xFFFFFFFF);
+			Renderer::DrawLine(v2.x, v2.y, v3.x, v3.y, 0xFFFFFFFF);
+			Renderer::DrawLine(v3.x, v3.y, v1.x, v1.y, 0xFFFFFFFF);
+			*/
 		}
 
 	private:
@@ -149,7 +156,7 @@ namespace Soft
 					{
 						// interpolate whole vertex attributes
 						vertex InterpolatedVertex = A * weightA + B * weightB + C * weightC;
-						
+
 						const float z = 1 / InterpolatedVertex.z;
 						InterpolatedVertex = InterpolatedVertex * z;
 
@@ -170,7 +177,6 @@ namespace Soft
 		{
 			return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 		};
-
 
 
 	private:

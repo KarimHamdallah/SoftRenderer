@@ -1,3 +1,10 @@
-Info,  T27228: Load res/bunny.obj
-Info,  T27228: Found a matching importer for this file format: Wavefront Object Importer.
-Info,  T27228: Import root directory is 'res\'
+Info,  T16660: Load res/bunny.obj
+Info,  T16660: Found a matching importer for this file format: Wavefront Object Importer.
+Info,  T16660: Import root directory is 'res\'
+Info,  T16660: Entering post processing pipeline
+Info,  T16660: Removed 2 nodes and 0 animation channels (1 output nodes)
+Info,  T16660: Kept 0 lights and 0 cameras.
+Info,  T16660: Moved 1 meshes to WCS (number of output meshes: 1)
+Info,  T16660: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Error, T16660: Failed to compute tangents; need UV data in channel0
+Info,  T16660: Leaving post processing pipeline

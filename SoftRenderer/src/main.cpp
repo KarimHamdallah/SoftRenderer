@@ -31,9 +31,9 @@ int main()
 	float thetaY = 0.0f;
 	float thetaZ = 0.0f;
 
-	vec3 Pos = { 0.0f, -1.0f, 10.0f };
+	vec3 Pos = { 0.0f, 0.0f, 10.0f };
 
-	std::shared_ptr<Texture2D> Tex = std::make_shared<Texture2D>("res/flag.png", false);
+	std::shared_ptr<Texture2D> Tex = std::make_shared<Texture2D>("res/flag.png", true);
 
 	while (!App->ShouldClose())
 	{
@@ -43,11 +43,11 @@ int main()
 		// update
 		// Handle keyboard input
 		if (Soft::Input::IsKeyPressed(Soft::Key::Q))
-			thetaX += 5.0f;
+			thetaX -= 1.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::W))
-			thetaY += 5.0f;
+			thetaY += 10.0f;
 		if (Soft::Input::IsKeyPressed(Soft::Key::E))
-			thetaZ += 5.0f;
+			thetaZ += 1.0f;
 
 		if (Soft::Input::IsKeyPressed(Soft::Key::Up))
 			Pos.z += 1.0f;
@@ -69,7 +69,7 @@ int main()
 
 		NormaledTrianglePipeline->DrawIndexed(model->GetVertices(), model->GetIndices());
 
-		thetaY -= 5.0f;
+		//thetaY -= 5.0f;
 
 
 		Soft::Renderer::Present();
